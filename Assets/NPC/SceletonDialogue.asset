@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed5f546af940946b19ac4e6d85695261, type: 3}
+  m_Name: SceletonDialogue
+  m_EditorClassIdentifier: 
+  npcName: Sceleton
+  npcPortrait: {fileID: -618180694, guid: 2315cc0495cb2054ea5dd392c1cff51e, type: 3}
+  dialogueLines:
+  - Hello world
+  - I am dying
+  - arghh...
+  autoProgressLines: 010000
+  autoProgressDelay: 1.5
+  typingSpeed: 0.05
+  voiceSound: {fileID: 8300000, guid: b180d595d87f5499b958f095796233a0, type: 3}
