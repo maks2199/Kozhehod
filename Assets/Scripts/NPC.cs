@@ -9,9 +9,8 @@ using Unity.VisualScripting;
 
 public class NPC : MonoBehaviour, IInteractable
 {
-
     public CharacterProfile characterProfile;
-    private bool isMonster;
+    public bool isMonster;
 
 
     public bool CanInteract()

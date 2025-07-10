@@ -1,17 +1,26 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Config;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using TMPro;
 using OllamaSharp;
+using Unity.VisualScripting;
 
 public class GameManager : Singleton<GameManager>
 {
 
-   public static GameManager Instance;
+    public static GameManager Instance;
+
+    public string llmModelName = "qwen2.5:7b";
+    Uri uri;
+    OllamaApiClient ollama;
+    Chat chat;
+
 
     public GameObject dialoguePanel;
     public TMP_Text dialogueText, nameText;
@@ -19,7 +28,8 @@ public class GameManager : Singleton<GameManager>
     public TMP_InputField inputField;
     public Image portraitImage;
 
-    public GameObject[] npcs;
+    // public GameObject[] npcs;
+    public List<GameObject> npcs;
 
     public GameObject monster;
 
@@ -29,25 +39,88 @@ public class GameManager : Singleton<GameManager>
 
     private GameState currentState;
 
+
+    // UI ----------
+
     public GameObject menuSceen;
+    public GameObject tutorialSceen;
+    public GameObject lowNpcSceen;
     public GameObject endGameScreen;
+    public TMP_Text endGameScreenResult;
+    public TMP_Text endGameScreenAlive;
+    public TMP_Text endGameScreenQuestions;
+    public TMP_Text endGameScreenQuestionsCount;
+    public TMP_Text endGameScreenScore;
+    public TMP_Text uiRemainedQuestionCount;
+    public TMP_Text uiCurrentScore;
 
-    public Image img;
+    public Image fadeImg;
 
+    public TMP_Text enemyTurnText;
 
+    // UI ----------
+    public GameObject UI;
     public PromptPreamble promptPreamble;
     public PromptConversationRules promptConversationRules;
     public PromptMonsterStatus promptMonsterStatus;
+    public PromptMonsterStatus promptHumanStatus;
+    public GameObject thinkingAnimation;
+
+    private string enemyScreenText = "Твой ход, Кожеход...";
 
 
+    // Game loop
+    public int maxQuestions = 10;
+    private int intRemainedQuestionCount;
+    private int countAskedQuestions = 0;
+    public float chanceToChangeBody;
+
+    public int npcCountToKillPlayer;
+    public float chanceToKillPlayer;
+    // public int currentScore;
+
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
-        // Pick random from player
-        monster = npcs[UnityEngine.Random.Range(0, npcs.Length)];
+        // set up the client
+        uri = new Uri("http://localhost:11434");
+        ollama = new OllamaApiClient(uri);
+        chat = new Chat(ollama);
+        // chat.Model = "qwen2.5:7b";
+        // chat.Model = "qwen3:4b";
+        chat.Model = llmModelName;
+        chat.Think = false;
 
-        // UpdateGameState(GameState.MainMenu); comment for debug
+        RefreshQuestionCounter();
+
+        npcs = new List<GameObject>(npcs); // преобразуем из массива в список
+
+        EnemyMoveToAnotherNpc();
+
+        UpdateGameState(GameState.MainMenu); // comment for debug
+        // UpdateGameState(GameState.Playing);
     }
+
+    void Update()
+    {
+        if (thinkingAnimation.activeSelf)
+        {
+            thinkingAnimation.transform.Rotate(0f, 0f, 100f * Time.deltaTime);
+        }
+    }
+
+    public void RestartGame()
+    {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentSceneName);
+    }
+
+
 
     public void Dialogue(NPC npc)
     {
@@ -72,70 +145,183 @@ public class GameManager : Singleton<GameManager>
 
         dialogueText.text = "...";
         dialoguePanel.SetActive(true);
+
+        bool isMonster = ReferenceEquals(npc.gameObject, Instance.monster);
+        Debug.Log($"isMonster: {isMonster}");
     }
     private async void AskQuestion(NPC npc)
     {
-        dialogueText.text = "";
-
-        bool isMonster = ReferenceEquals(npc.gameObject, Instance.monster);
-        
-        Debug.Log($"isMonster: {isMonster}");
-
-        string playerQuestion = inputField.text;
-        
-
-        // set up the client
-        var uri = new Uri("http://localhost:11434");
-        var ollama = new OllamaApiClient(uri);
-
-        string prompt = promptPreamble.text
-        + npc.characterProfile.text
-        + promptMonsterStatus.text
-        + isMonster.ToString() + " "
-        + promptConversationRules.text
-        + playerQuestion
-        + $"IsMonster = {isMonster}. Reflect this in your tone and responses. You sloud reveal";
-
-        Debug.Log($"Prompt: {prompt}");
-
-        var chat = new Chat(ollama);
-        chat.Model = "qwen2.5:7b";
-        // chat.Model = "qwen3:4b";
-        chat.Think = false;
-
-
-        await foreach (var answerToken in chat.SendAsync(prompt))
+        if (intRemainedQuestionCount > 0)
         {
-            dialogueText.text += answerToken;
-            await Task.Yield(); // 👈 даёт Unity шанс отрисовать UI
+            countAskedQuestions++;
+            DecreeseQuestionCounter();
+
+            dialogueText.text = "";
+
+            bool isMonster = ReferenceEquals(npc.gameObject, Instance.monster);
+            string statusText;
+            if (isMonster)
+            {
+                statusText = promptMonsterStatus.text;
+            }
+            else
+            {
+                statusText = promptHumanStatus.text;
+            }
+
+            Debug.Log($"isMonster: {isMonster}");
+
+            string playerQuestion = inputField.text;
+            endGameScreenQuestions.text += $"\n {playerQuestion}";
+
+
+            
+
+            string prompt = promptPreamble.text + " "
+            + npc.characterProfile.text + " "
+            + statusText + " "
+            + promptConversationRules.text + " "
+            + playerQuestion;
+
+            Debug.Log($"Prompt: {prompt}");
+            Debug.Log($"Model: {llmModelName}");
+
+            
+            
+
+            thinkingAnimation.SetActive(true);
+            await foreach (var answerToken in chat.SendAsync(prompt))
+            {
+                dialogueText.text += answerToken;
+                await Task.Yield(); // 👈 даёт Unity шанс отрисовать UI
+            }
+            thinkingAnimation.SetActive(false);
+
+            UpdateCurrentScore();
         }
+        else
+        {
+            Debug.Log("Out of questions!");
+        }
+
     }
 
+
+    // Game loop -------------------------------
     public void KillNpc()
     {
         Debug.Log("KillNpc()");
         if (activeNpc != null)
         {
-            Destroy(activeNpc);
+            npcs.Remove(activeNpc); // удаляем из списка
+            Destroy(activeNpc);     // уничтожаем объект
             dialoguePanel.SetActive(false);
             activeNpc = null;
 
 
             // Calculate score points
-
-
-
-            StartCoroutine(FadeImage(false));
-            // enemy turn
-            StartCoroutine(FadeImage(true));
+            EndPlayerTurn();
         }
     }
 
-
-    void Awake()
+    public void EndPlayerTurn()
     {
-        Instance = this;
+        UpdateGameState(GameState.EnemyTurn);
     }
+
+    private void RefreshQuestionCounter()
+    {
+        intRemainedQuestionCount = maxQuestions;
+        uiRemainedQuestionCount.SetText(intRemainedQuestionCount.ToString());
+    }
+    private void DecreeseQuestionCounter()
+    {
+        intRemainedQuestionCount--;
+        uiRemainedQuestionCount.SetText(intRemainedQuestionCount.ToString()); 
+    }
+
+    public void MakeEnemyTurn()
+    {
+        Debug.Log("MakeEnemyTurn()");
+
+        // Получаем список всех НЕ-монстров
+        List<GameObject> aliveNonMonsterNpcs = npcs.FindAll(npc => npc != monster);
+
+        bool monsterAlive = npcs.Contains(monster);
+        bool shouldMoveToAnotherNpc = UnityEngine.Random.value <= chanceToChangeBody / 100f;
+        Debug.Log($"shouldMoveToAnotherNpc: {shouldMoveToAnotherNpc}");
+        bool shouldMoveToPlayer = false;
+        if (npcs.Count <= npcCountToKillPlayer)
+        {
+            shouldMoveToPlayer = UnityEngine.Random.value <= chanceToKillPlayer / 100f;
+        }
+
+
+        // If monster is still alive
+        if (monsterAlive)
+        {
+            if (shouldMoveToPlayer)
+            {
+                Debug.Log("Monster moved to Player!");
+                EndGame();
+                return;
+            }
+            else if (shouldMoveToAnotherNpc)
+            {
+                if (aliveNonMonsterNpcs.Count == 0)
+                {
+                    Debug.Log("No more non-monster NPCs left!");
+                    EndGame();
+                    return;
+                }
+
+                // Выбираем случайного НЕ-монстра
+                GameObject randomNpc = aliveNonMonsterNpcs[UnityEngine.Random.Range(0, aliveNonMonsterNpcs.Count)];
+
+                Debug.Log($"EnemyTurn kills: {randomNpc.name}");
+
+                npcs.Remove(randomNpc); // удаляем из общего списка
+                Destroy(randomNpc);     // уничтожаем объект
+
+                EnemyMoveToAnotherNpc();
+            }
+
+        }
+        else
+        {
+
+        }
+
+
+
+        UpdateGameState(GameState.Playing);
+        RefreshQuestionCounter();
+        UpdateCurrentScore();
+    }
+
+    private void EnemyMoveToAnotherNpc()
+    {
+        // Pick random from player
+        monster = npcs[UnityEngine.Random.Range(0, npcs.Count)];
+    }
+
+
+    public void CloseDialog()
+    {
+        dialoguePanel.SetActive(false);
+        inputField.text = ""; // очищаем поле ввода
+        isDialogueActive = false;
+    }
+
+    public void OnCloseDialog(InputAction.CallbackContext context)
+    {
+        CloseDialog();
+    }
+    public bool IsDialogueActive()
+    {
+        return isDialogueActive;
+    }
+
 
     public void UpdateGameState(GameState newState)
     {
@@ -146,19 +332,35 @@ public class GameManager : Singleton<GameManager>
             case GameState.MainMenu:
                 Time.timeScale = 0f;
                 Debug.Log($"GameState: {currentState}");
+                menuSceen.SetActive(true);
+                tutorialSceen.SetActive(false);
+                lowNpcSceen.SetActive(false);
+                endGameScreen.SetActive(false);
+                UI.SetActive(false);
+                break;
+            case GameState.Tutorial:
+                Time.timeScale = 0f;
+                Debug.Log($"GameState: {currentState}");
+                // menuSceen.SetActive(false);
+                tutorialSceen.SetActive(true);
+                endGameScreen.SetActive(false);
+                UI.SetActive(false);
                 break;
             case GameState.Playing:
                 Time.timeScale = 1f;
                 Debug.Log($"GameState: {currentState}");
+                UI.SetActive(true);
+                menuSceen.SetActive(false);
+                tutorialSceen.SetActive(false);
                 break;
             case GameState.EnemyTurn:
                 Debug.Log($"GameState: {currentState}");
                 Debug.Log("Start of enemy turn");
-                new WaitForSeconds(5);
-                Debug.Log("End of enemy turn");
+                StartCoroutine(RunEnemyTurnWithFade());
                 break;
             case GameState.GameOver:
                 Debug.Log($"GameState: {currentState}");
+                UI.SetActive(false);
                 break;
             case GameState.Victory:
                 break;
@@ -172,6 +374,7 @@ public class GameManager : Singleton<GameManager>
     public enum GameState
     {
         MainMenu,
+        Tutorial,
         Playing,
         EnemyTurn,
         Paused,
@@ -185,44 +388,144 @@ public class GameManager : Singleton<GameManager>
         get { return currentState; }
     }
 
-    public void StartGame()
+    public void StartPlaying()
     {
         UpdateGameState(GameState.Playing);
-        menuSceen.SetActive(false);
+        UpdateCurrentScore();
+    }
+    public void StartGame()
+    {
+        UpdateGameState(GameState.Tutorial);
+    }
+    public void CloseLowNpcScren()
+    {
+        lowNpcSceen.SetActive(false);
     }
     public void EndGame()
     {
         UpdateGameState(GameState.GameOver);
+
         endGameScreen.SetActive(true);
-    }
-    
 
+        // Count alive npcs
+        List<GameObject> aliveNonMonsterNpcs = npcs.FindAll(npc => npc != monster);
+        // int countAliveNpcs = aliveNonMonsterNpcs.Count;
+        int countAliveNpcs = npcs.Count;
+        endGameScreenAlive.SetText($"Выжившие: {countAliveNpcs}");
 
-    IEnumerator FadeImage(bool fadeAway)
-    {
-        // fade from opaque to transparent
-        if (fadeAway)
+        // Check Vin or loose
+        bool monsterAlive = npcs.Contains(monster);
+        if (monsterAlive)
         {
-            // loop over 1 second backwards
-            for (float i = 1; i >= 0; i -= Time.deltaTime)
-            {
-                // set color with i as alpha
-                img.color = new Color(1, 1, 1, i);
-                yield return null;
-            }
+            endGameScreenResult.SetText($"Поражение. Кожеход добрался до города");
+            endGameScreenResult.color = new Color(250, 0, 0);
+            endGameScreenScore.SetText("Счёт: 0");
         }
-        // fade from transparent to opaque
         else
         {
-            // loop over 1 second
-            for (float i = 0; i <= 1; i += Time.deltaTime)
-            {
-                // set color with i as alpha
-                img.color = new Color(1, 1, 1, i);
-                yield return null;
-            }
+            endGameScreenResult.SetText($"Победа");
+            endGameScreenResult.color = new Color(0, 250, 0);
+            endGameScreenScore.SetText("Счёт: " + (countAliveNpcs * 10 + countAskedQuestions * -1).ToString());
         }
+
+
+
+        // Count asked questions
+        endGameScreenQuestionsCount.SetText($"Вопросы: {countAskedQuestions}");
+
+
     }
+
+    public void UpdateCurrentScore()
+    {
+        int countAliveNpcs = npcs.Count;
+        int score = countAliveNpcs * 10 + countAskedQuestions * -1;
+        uiCurrentScore.SetText(score.ToString());
+
+    }
+
+    IEnumerator FadeImage(bool fadeIn, float duration = 1f)
+    {
+        float start = fadeIn ? 0f : 1f;
+        float end = fadeIn ? 1f : 0f;
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float alpha = Mathf.Lerp(start, end, elapsed / duration);
+            fadeImg.color = new Color(0, 0, 0, alpha); // черный экран
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        fadeImg.color = new Color(0, 0, 0, end);
+    }
+
+    IEnumerator FadeTextAlpha(TMP_Text text, float from, float to, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float alpha = Mathf.Lerp(from, to, elapsed / duration);
+            text.color = new Color(text.color.r, text.color.g, text.color.b, alpha);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        text.color = new Color(text.color.r, text.color.g, text.color.b, to);
+    }
+
+
+    IEnumerator RunEnemyTurnWithFade()
+    {
+        yield return StartCoroutine(FadeImage(true)); // черный экран
+
+        // TODO:: place it in right place. Or change enemy turn text?
+        if (npcs.Count <= npcCountToKillPlayer + 1)
+        {
+            // lowNpcSceen.SetActive(true);
+            enemyScreenText = "Твой ход, Кожеход... \n Теперь Кожеход может переселиться в тебя";
+        }
+        else
+        {
+            enemyScreenText = "Твой ход, Кожеход...";
+        }
+
+        // Показать текст
+        if (enemyTurnText != null)
+        {
+            enemyTurnText.text = enemyScreenText;
+            yield return StartCoroutine(FadeTextAlpha(enemyTurnText, 0f, 1f, 1f));
+        }
+
+        // Задержка перед звуком
+        yield return new WaitForSeconds(0.5f);
+
+        // ▶️ Звук
+        // if (monsterAttackClip != null && audioSource != null)
+        // {
+        //     audioSource.PlayOneShot(monsterAttackClip);
+        // }
+
+        yield return new WaitForSeconds(1.5f);
+
+        // Удаляем жертву
+        MakeEnemyTurn();
+
+        // Скрыть текст
+        if (enemyTurnText != null)
+        {
+            enemyTurnText.text = "";
+            enemyTurnText.color = new Color(enemyTurnText.color.r,
+            enemyTurnText.color.g,
+            enemyTurnText.color.b,
+            0); // прозрачный
+        }
+
+        // рассвет
+        yield return StartCoroutine(FadeImage(false));
+    }
+
+
 
 
     //
