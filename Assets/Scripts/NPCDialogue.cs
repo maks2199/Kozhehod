@@ -1,18 +1,19 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewNPCDialogue", menuName = "NPC Dialogue")]
-public class NPCDialogue : ScriptableObject
-{
-    public string npcName;
-    public Sprite npcPortrait;
-    public string[] dialogueLines;
-    public bool[] autoProgressLines;
-    public float autoProgressDelay = 1.5f;
-    public float typingSpeed = 0.05f;
-    public AudioClip voiceSound;
+// [CreateAssetMenu(fileName = "NewNPCDialogue", menuName = "NPC Dialogue")]
+// public class NPCDialogue : ScriptableObject
+// {
+//     public string npcName;
+//     public string npcProfession;
+//     public Sprite npcPortrait;
+//     public string[] dialogueLines;
+//     public bool[] autoProgressLines;
+//     public float autoProgressDelay = 1.5f;
+//     public float typingSpeed = 0.05f;
+//     public AudioClip voiceSound;
 
-    public string biography;
+//     public string biography;
 
-    public bool isMonster;
+//     public bool isMonster;
 
-}
+// }

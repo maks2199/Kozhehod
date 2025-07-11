@@ -10,6 +10,10 @@ using UnityEngine.InputSystem;
 using TMPro;
 using OllamaSharp;
 using Unity.VisualScripting;
+using System.Linq;
+using System.IO;
+using NUnit.Framework.Constraints;
+
 
 public class GameManager : Singleton<GameManager>
 {
@@ -23,7 +27,7 @@ public class GameManager : Singleton<GameManager>
 
 
     public GameObject dialoguePanel;
-    public TMP_Text dialogueText, nameText;
+    public TMP_Text dialogueText, nameText, professionText;
     private bool isTyping, isDialogueActive;
     public TMP_InputField inputField;
     public Image portraitImage;
@@ -43,6 +47,7 @@ public class GameManager : Singleton<GameManager>
     // UI ----------
 
     public GameObject menuSceen;
+    public TMP_InputField playerNameField;
     public GameObject tutorialSceen;
     public GameObject lowNpcSceen;
     public GameObject endGameScreen;
@@ -51,6 +56,8 @@ public class GameManager : Singleton<GameManager>
     public TMP_Text endGameScreenQuestions;
     public TMP_Text endGameScreenQuestionsCount;
     public TMP_Text endGameScreenScore;
+    public TMP_Text endGameScreenLeaderboard;
+    public TMP_Text uiMonsterNames;
     public TMP_Text uiRemainedQuestionCount;
     public TMP_Text uiCurrentScore;
 
@@ -78,6 +85,7 @@ public class GameManager : Singleton<GameManager>
     public int npcCountToKillPlayer;
     public float chanceToKillPlayer;
     // public int currentScore;
+    private List<String> monsterNames = new List<string>();
 
 
     void Awake()
@@ -87,24 +95,11 @@ public class GameManager : Singleton<GameManager>
 
     void Start()
     {
-        // set up the client
-        uri = new Uri("http://localhost:11434");
-        ollama = new OllamaApiClient(uri);
-        chat = new Chat(ollama);
-        // chat.Model = "qwen2.5:7b";
-        // chat.Model = "qwen3:4b";
-        chat.Model = llmModelName;
-        chat.Think = false;
-
-        RefreshQuestionCounter();
-
-        npcs = new List<GameObject>(npcs); // преобразуем из массива в список
-
-        EnemyMoveToAnotherNpc();
-
+        
         UpdateGameState(GameState.MainMenu); // comment for debug
         // UpdateGameState(GameState.Playing);
     }
+
 
     void Update()
     {
@@ -120,7 +115,30 @@ public class GameManager : Singleton<GameManager>
         SceneManager.LoadScene(currentSceneName);
     }
 
+    void StartPlayerTurn()
+    {
+        // set up the client
+        uri = new Uri("http://localhost:11434");
+        ollama = new OllamaApiClient(uri);
+        
 
+        RefreshQuestionCounter();
+
+        npcs = new List<GameObject>(npcs); // преобразуем из массива в список
+        foreach (GameObject npcGO in npcs) // Инициализируем чат для  всех NPC
+        {
+            NPC npc = npcGO.GetComponent<NPC>();
+            npc.UpdateChat(
+                ollama,
+                llmModelName,
+                promptPreamble.text,
+                promptConversationRules.text,
+                promptHumanStatus.text,
+                promptMonsterStatus.text);
+        }
+
+        EnemyMoveToAnotherNpc();
+    }
 
     public void Dialogue(NPC npc)
     {
@@ -141,13 +159,22 @@ public class GameManager : Singleton<GameManager>
         isDialogueActive = true;
 
         nameText.SetText(npc.characterProfile.npcName);
+        professionText.SetText(npc.characterProfile.npcProfession);
         portraitImage.sprite = npc.characterProfile.npcPortrait;
 
-        dialogueText.text = "...";
+
+        // Get random phraze from list
+        string startPhraze = npc.characterProfile.startPhrazes[UnityEngine.Random.Range(0, npc.characterProfile.startPhrazes.Count)];
+        dialogueText.SetText(startPhraze);
         dialoguePanel.SetActive(true);
 
         bool isMonster = ReferenceEquals(npc.gameObject, Instance.monster);
         Debug.Log($"isMonster: {isMonster}");
+
+        // Create LLM chat for each npc!
+        // chat = new Chat(ollama);
+        // chat.Model = llmModelName;
+        // chat.Think = false;
     }
     private async void AskQuestion(NPC npc)
     {
@@ -159,15 +186,15 @@ public class GameManager : Singleton<GameManager>
             dialogueText.text = "";
 
             bool isMonster = ReferenceEquals(npc.gameObject, Instance.monster);
-            string statusText;
-            if (isMonster)
-            {
-                statusText = promptMonsterStatus.text;
-            }
-            else
-            {
-                statusText = promptHumanStatus.text;
-            }
+            // string statusText;
+            // if (isMonster)
+            // {
+            //     statusText = promptMonsterStatus.text;
+            // }
+            // else
+            // {
+            //     statusText = promptHumanStatus.text;
+            // }
 
             Debug.Log($"isMonster: {isMonster}");
 
@@ -175,26 +202,29 @@ public class GameManager : Singleton<GameManager>
             endGameScreenQuestions.text += $"\n {playerQuestion}";
 
 
-            
 
-            string prompt = promptPreamble.text + " "
-            + npc.characterProfile.text + " "
-            + statusText + " "
-            + promptConversationRules.text + " "
-            + playerQuestion;
 
-            Debug.Log($"Prompt: {prompt}");
+            // string prompt = promptPreamble.text + " "
+            // + npc.characterProfile.text + " "
+            // + statusText + " "
+            // + promptConversationRules.text + " "
+            // + playerQuestion;
+
+            chat = npc.chat;
+
+            // Debug.Log($"Prompt: {prompt}");
             Debug.Log($"Model: {llmModelName}");
 
             
-            
 
             thinkingAnimation.SetActive(true);
-            await foreach (var answerToken in chat.SendAsync(prompt))
+            await foreach (var answerToken in chat.SendAsync(playerQuestion))
             {
                 dialogueText.text += answerToken;
                 await Task.Yield(); // 👈 даёт Unity шанс отрисовать UI
             }
+            Debug.Log("Messages:");
+            chat.Messages.ForEach(m => Debug.Log(m.ToString()));
             thinkingAnimation.SetActive(false);
 
             UpdateCurrentScore();
@@ -211,8 +241,14 @@ public class GameManager : Singleton<GameManager>
     public void KillNpc()
     {
         Debug.Log("KillNpc()");
+        // bool isMonster = ReferenceEquals(activeNpc.gameObject, Instance.monster);
         if (activeNpc != null)
         {
+            // if (isMonster)
+            // {
+
+            // }
+
             npcs.Remove(activeNpc); // удаляем из списка
             Destroy(activeNpc);     // уничтожаем объект
             dialoguePanel.SetActive(false);
@@ -303,6 +339,22 @@ public class GameManager : Singleton<GameManager>
     {
         // Pick random from player
         monster = npcs[UnityEngine.Random.Range(0, npcs.Count)];
+        
+
+        NPC monsterNpc = monster.GetComponent<NPC>();
+        string monsterName = monsterNpc.characterProfile.npcName;
+        monsterNpc.isMonster = true;
+        monsterNpc.UpdateChat(
+            ollama,
+            llmModelName,
+            promptPreamble.text,
+            promptConversationRules.text,
+            promptHumanStatus.text,
+            promptMonsterStatus.text);
+        
+
+        // Log choice
+        monsterNames.Add(monsterName);
     }
 
 
@@ -352,6 +404,7 @@ public class GameManager : Singleton<GameManager>
                 UI.SetActive(true);
                 menuSceen.SetActive(false);
                 tutorialSceen.SetActive(false);
+                StartPlayerTurn();
                 break;
             case GameState.EnemyTurn:
                 Debug.Log($"GameState: {currentState}");
@@ -411,38 +464,70 @@ public class GameManager : Singleton<GameManager>
         List<GameObject> aliveNonMonsterNpcs = npcs.FindAll(npc => npc != monster);
         // int countAliveNpcs = aliveNonMonsterNpcs.Count;
         int countAliveNpcs = npcs.Count;
+        int score;
         endGameScreenAlive.SetText($"Выжившие: {countAliveNpcs}");
 
         // Check Vin or loose
         bool monsterAlive = npcs.Contains(monster);
         if (monsterAlive)
         {
+            score = 0;
             endGameScreenResult.SetText($"Поражение. Кожеход добрался до города");
             endGameScreenResult.color = new Color(250, 0, 0);
             endGameScreenScore.SetText("Счёт: 0");
         }
         else
         {
+            score = countAliveNpcs * 10 + countAskedQuestions * -1 + 40;
             endGameScreenResult.SetText($"Победа");
             endGameScreenResult.color = new Color(0, 250, 0);
-            endGameScreenScore.SetText("Счёт: " + (countAliveNpcs * 10 + countAskedQuestions * -1).ToString());
+            endGameScreenScore.SetText("Счёт: " + score.ToString());
         }
 
-
+        uiMonsterNames.SetText("Имена монстров: " + string.Join(", ", monsterNames));
 
         // Count asked questions
         endGameScreenQuestionsCount.SetText($"Вопросы: {countAskedQuestions}");
 
-
+        // Leaderboard
+        AddNewEntry(playerNameField.text, score);
+        endGameScreenLeaderboard.SetText(LoadLeaderboard().EntriesToString());
     }
 
     public void UpdateCurrentScore()
     {
         int countAliveNpcs = npcs.Count;
-        int score = countAliveNpcs * 10 + countAskedQuestions * -1;
+        int score = countAliveNpcs * 10 + countAskedQuestions * -1 + 40;
         uiCurrentScore.SetText(score.ToString());
 
     }
+
+    // Leaderboard
+    private string filePath => Path.Combine(Application.persistentDataPath, "leaderboard.json");
+
+    public void AddNewEntry(string playerName, int score)
+    {
+        LeaderboardData data = LoadLeaderboard();
+        data.entries.Add(new LeaderboardEntry(playerName, score));
+        SaveLeaderboard(data);
+    }
+
+    private LeaderboardData LoadLeaderboard()
+    {
+        if (!File.Exists(filePath))
+            return new LeaderboardData();
+
+        string json = File.ReadAllText(filePath);
+        return JsonUtility.FromJson<LeaderboardData>(json);
+    }
+
+    private void SaveLeaderboard(LeaderboardData data)
+    {
+        string json = JsonUtility.ToJson(data, true); // Pretty print
+        File.WriteAllText(filePath, json);
+    }
+
+
 
     IEnumerator FadeImage(bool fadeIn, float duration = 1f)
     {
