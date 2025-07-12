@@ -154,6 +154,7 @@ MonoBehaviour:
   npcName: "\u0410\u043A\u0430\u043A\u0438\u0439 \u041F\u0435\u0442\u0440\u043E\u0432\u0438\u0447"
   npcProfession: "\u0411\u0438\u043E\u043B\u043E\u0433"
   npcPortrait: {fileID: -5762985388437330898, guid: 6eb945e6f09814a92a8d311d9dec16b5, type: 3}
+  aliveSprite: {fileID: -5416687131960270582, guid: 400315e8be139485e9315eeb81d904e7, type: 3}
   deadSprite: {fileID: -1149312594620663861, guid: ff6a31607ae3a42149fef5f9b10ffb33, type: 3}
   startPhrazes:
   - "\u041D\u0443 \u043A\u0430\u043A, \u0432\u044B \u0432\u044B\u044F\u0441\u043D\u0438\u043B\u0438

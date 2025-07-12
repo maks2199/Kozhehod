@@ -71,6 +71,15 @@ public class NPC : MonoBehaviour, IInteractable
 
         return chatLog;
     }
+
+    public void SetAliveSprite()
+{
+    SpriteRenderer sr = GetComponent<SpriteRenderer>();
+    if (sr != null && characterProfile.aliveSprite != null)
+    {
+        sr.sprite = characterProfile.aliveSprite;
+    }
+}
 }
 
 

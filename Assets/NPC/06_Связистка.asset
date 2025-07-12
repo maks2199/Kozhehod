@@ -85,6 +85,7 @@ MonoBehaviour:
   npcName: "\u0418\u0434\u0430 \u041A\u0440\u0430\u043B\u0438\u0447"
   npcProfession: "\u0421\u0432\u044F\u0437\u0438\u0441\u0442"
   npcPortrait: {fileID: 1623028206407414927, guid: c3e681b0dc8ab424b861acb478f3be2f, type: 3}
+  aliveSprite: {fileID: -5695220069881681669, guid: c3a4a42d473a34623856e973705a650e, type: 3}
   deadSprite: {fileID: -1149312594620663861, guid: ff6a31607ae3a42149fef5f9b10ffb33, type: 3}
   startPhrazes:
   - "\u0423 \u0442\u0435\u0431\u044F \u043A\u043E\u0433\u0434\u0430-\u043D\u0438\u0431\u0443\u0434\u044C

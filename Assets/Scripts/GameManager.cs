@@ -135,6 +135,10 @@ public class GameManager : Singleton<GameManager>
         foreach (GameObject npcGO in npcs) // Инициализируем чат для  всех NPC
         {
             NPC npc = npcGO.GetComponent<NPC>();
+
+            // Set alive sprite here
+            npc.SetAliveSprite();
+            
             npc.UpdateChat(
                 ollama,
                 llmModelName,
