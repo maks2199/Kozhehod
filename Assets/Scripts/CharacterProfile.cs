@@ -12,5 +12,7 @@ public class CharacterProfile : ScriptableObject
     public string npcProfession;
     public Sprite npcPortrait;
 
+    public Sprite deadSprite;
+
     public List<String> startPhrazes;
 }

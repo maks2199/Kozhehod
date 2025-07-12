@@ -99,6 +99,6 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
 
 
-Assets/Ninja Adventure - Asset Pack
-Assets/Packages
-Assets/Roguelike2D
+# Assets/Ninja Adventure - Asset Pack
+# Assets/Packages
+# Assets/Roguelike2D

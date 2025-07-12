@@ -51,6 +51,8 @@ public class GameManager : Singleton<GameManager>
     public GameObject tutorialSceen;
     public GameObject lowNpcSceen;
     public GameObject endGameScreen;
+
+    public GameObject playerAnalyzeScreen;
     public TMP_Text endGameScreenResult;
     public TMP_Text endGameScreenAlive;
     public TMP_Text endGameScreenQuestions;
@@ -74,6 +76,11 @@ public class GameManager : Singleton<GameManager>
     public GameObject thinkingAnimation;
 
     private string enemyScreenText = "Твой ход, Кожеход...";
+
+    // Player Analyze screen
+    public GameObject npcStatusScreen;
+    public Transform npcStatusListContainer; // content для списка
+    public GameObject npcStatusItemPrefab;
 
 
     // Game loop
@@ -122,8 +129,6 @@ public class GameManager : Singleton<GameManager>
     void StartPlayerTurn()
     {
         
-        
-
         RefreshQuestionCounter();
 
         npcs = new List<GameObject>(npcs); // преобразуем из массива в список
@@ -140,6 +145,13 @@ public class GameManager : Singleton<GameManager>
         }
 
         // EnemyMoveToAnotherNpc();
+    }
+
+    public void ContinuePlaying()
+    {
+        UpdateGameState(GameState.Playing);
+        RefreshQuestionCounter();
+        UpdateCurrentScore();
     }
 
     public void Dialogue(NPC npc)
@@ -245,7 +257,7 @@ public class GameManager : Singleton<GameManager>
 
 
     // Game loop -------------------------------
-    public void KillNpc()
+    public void KillNpcPlayer()
     {
         Debug.Log("KillNpc()");
         // bool isMonster = ReferenceEquals(activeNpc.gameObject, Instance.monster);
@@ -256,8 +268,8 @@ public class GameManager : Singleton<GameManager>
 
             // }
 
-            npcs.Remove(activeNpc); // удаляем из списка
-            Destroy(activeNpc);     // уничтожаем объект
+            KillNpc(activeNpc);
+
             dialoguePanel.SetActive(false);
             activeNpc = null;
 
@@ -265,6 +277,15 @@ public class GameManager : Singleton<GameManager>
             // Calculate score points
             EndPlayerTurn();
         }
+    }
+
+    private void KillNpc(GameObject npc)
+    {
+        npcs.Remove(npc); // удаляем из списка
+        // Destroy(activeNpc);     // уничтожаем объект // TODO replace with dead image instead of remove
+        SpriteRenderer spriteRenderer = npc.GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = npc.GetComponent<NPC>().characterProfile.deadSprite;
+        // spriteRenderer.sprite.
     }
 
     public void EndPlayerTurn()
@@ -320,8 +341,9 @@ public class GameManager : Singleton<GameManager>
 
                     Debug.Log($"EnemyTurn kills: {randomNpc.name}");
 
-                    npcs.Remove(randomNpc); // удаляем из общего списка
-                    Destroy(randomNpc);     // уничтожаем объект
+                    // npcs.Remove(randomNpc); // удаляем из общего списка
+                    // Destroy(activeNpc);     // уничтожаем объект // TODO replace with dead image instead of remove
+                    KillNpc(randomNpc);
 
                     EnemyMoveToAnotherNpc();
                 }
@@ -342,16 +364,43 @@ public class GameManager : Singleton<GameManager>
 
 
 
-        UpdateGameState(GameState.Playing);
-        RefreshQuestionCounter();
-        UpdateCurrentScore();
+        // UpdateGameState(GameState.Playing);
+        // RefreshQuestionCounter();
+        // UpdateCurrentScore();
+
+        // Status of npcs
+        UpdateGameState(GameState.PlayerAnalyze);
+        
+    }
+
+    private void UpdateNpcStatusScreen()
+    {
+        // Очистим список
+        foreach (Transform child in npcStatusListContainer)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // Добавим все живые NPC
+        foreach (GameObject npcGO in npcs)
+        {
+            NPC npc = npcGO.GetComponent<NPC>();
+            GameObject itemGO = Instantiate(npcStatusItemPrefab, npcStatusListContainer);
+            NpcStatusItem item = itemGO.GetComponent<NpcStatusItem>();
+            item.Setup(npc);
+
+            // itemGO.SetActive(true); // Make sure whole item is active
+            // portraitImage.gameObject.SetActive(true);
+            // nameText.gameObject.SetActive(true);
+            // professionText.gameObject.SetActive(true);
+        }
     }
 
     private void EnemyMoveToAnotherNpc()
     {
         // Pick random from player
         monster = npcs[UnityEngine.Random.Range(0, npcs.Count)];
-        
+
 
         NPC monsterNpc = monster.GetComponent<NPC>();
         string monsterName = monsterNpc.characterProfile.npcName;
@@ -363,7 +412,7 @@ public class GameManager : Singleton<GameManager>
             promptConversationRules.text,
             promptHumanStatus.text,
             promptMonsterStatus.text);
-        
+
 
         // Log choice
         monsterNames.Add(monsterName);
@@ -398,9 +447,10 @@ public class GameManager : Singleton<GameManager>
                 Debug.Log($"GameState: {currentState}");
                 menuSceen.SetActive(true);
                 tutorialSceen.SetActive(false);
-                lowNpcSceen.SetActive(false);
+                // lowNpcSceen.SetActive(false);
                 endGameScreen.SetActive(false);
                 UI.SetActive(false);
+                playerAnalyzeScreen.SetActive(false);
                 break;
             case GameState.Tutorial:
                 Time.timeScale = 0f;
@@ -408,6 +458,7 @@ public class GameManager : Singleton<GameManager>
                 // menuSceen.SetActive(false);
                 tutorialSceen.SetActive(true);
                 endGameScreen.SetActive(false);
+                playerAnalyzeScreen.SetActive(false);
                 UI.SetActive(false);
                 break;
             case GameState.Playing:
@@ -416,16 +467,24 @@ public class GameManager : Singleton<GameManager>
                 UI.SetActive(true);
                 menuSceen.SetActive(false);
                 tutorialSceen.SetActive(false);
+                playerAnalyzeScreen.SetActive(false);
                 StartPlayerTurn();
                 break;
             case GameState.EnemyTurn:
                 Debug.Log($"GameState: {currentState}");
                 Debug.Log("Start of enemy turn");
+                UI.SetActive(false);
                 StartCoroutine(RunEnemyTurnWithFade());
+                break;
+            case GameState.PlayerAnalyze:
+                Debug.Log($"GameState: {currentState}");
+                // UI.SetActive(false);
+                playerAnalyzeScreen.SetActive(true);
                 break;
             case GameState.GameOver:
                 Debug.Log($"GameState: {currentState}");
                 UI.SetActive(false);
+                endGameScreen.SetActive(true);
                 break;
             case GameState.Victory:
                 break;
@@ -442,6 +501,7 @@ public class GameManager : Singleton<GameManager>
         Tutorial,
         Playing,
         EnemyTurn,
+        PlayerAnalyze,
         Paused,
         GameOver,
         Victory,
@@ -620,6 +680,8 @@ public class GameManager : Singleton<GameManager>
 
         // рассвет
         yield return StartCoroutine(FadeImage(false));
+
+        UpdateNpcStatusScreen();
     }
 
 

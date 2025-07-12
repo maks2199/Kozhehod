@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CSharpToJsonSchema</name>
+    </assembly>
+    <members>
+        <member name="T:CSharpToJsonSchema.GenerateJsonSchemaAttribute">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CSharpToJsonSchema.GenerateJsonSchemaAttribute.Strict">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:CSharpToJsonSchema.OpenApiSchema">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CSharpToJsonSchema.OpenApiSchema.Type">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CSharpToJsonSchema.OpenApiSchema.Format">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CSharpToJsonSchema.OpenApiSchema.Description">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CSharpToJsonSchema.OpenApiSchema.Enum">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CSharpToJsonSchema.OpenApiSchema.Required">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CSharpToJsonSchema.OpenApiSchema.Properties">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CSharpToJsonSchema.OpenApiSchema.Items">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CSharpToJsonSchema.OpenApiSchema.AdditionalProperties2">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:CSharpToJsonSchema.Tool">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CSharpToJsonSchema.Tool.Name">
+            <summary>
+            The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+            </summary>
+        </member>
+        <member name="P:CSharpToJsonSchema.Tool.Description">
+            <summary>
+            A description of what the function does, used by the model to choose when and how to call the function.
+            </summary>
+        </member>
+        <member name="P:CSharpToJsonSchema.Tool.Parameters">
+            <summary>
+            The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format. <br/>
+            Omitting `parameters` defines a function with an empty parameter list.
+            </summary>
+        </member>
+        <member name="P:CSharpToJsonSchema.Tool.Strict">
+            <summary>
+            Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](docs/guides/function-calling).<br/>
+            Default Value: false
+            </summary>
+        </member>
+        <member name="P:CSharpToJsonSchema.Tool.AdditionalProperties">
+            <summary>
+            Additional properties that are not explicitly defined in the schema
+            </summary>
+        </member>
+        <member name="T:CSharpToJsonSchema.TypeToSchemaHelpers">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CSharpToJsonSchema.TypeToSchemaHelpers.AsJsonSchema(System.Text.Json.Serialization.Metadata.JsonTypeInfo,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="typeInfo"></param>
+            <param name="strict"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:CSharpToJsonSchema.TypeToSchemaHelpers.AsJsonSchema(System.Type,System.Boolean,System.Text.Json.Serialization.Metadata.IJsonTypeInfoResolver,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            
+            </summary>
+            <param name="type"></param>
+            <param name="strict"></param>
+            <param name="jsonTypeInfoResolver"></param>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CSharpToJsonSchema.TypeToSchemaHelpers.ToOpenApiTypeAndFormat(System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+    </members>
+</doc>
