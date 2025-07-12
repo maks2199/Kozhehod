@@ -95,9 +95,13 @@ public class GameManager : Singleton<GameManager>
 
     void Start()
     {
-        
+        // set up the client
+        uri = new Uri("http://localhost:11434");
+        ollama = new OllamaApiClient(uri);
+
         UpdateGameState(GameState.MainMenu); // comment for debug
         // UpdateGameState(GameState.Playing);
+        EnemyMoveToAnotherNpc();
     }
 
 
@@ -117,9 +121,7 @@ public class GameManager : Singleton<GameManager>
 
     void StartPlayerTurn()
     {
-        // set up the client
-        uri = new Uri("http://localhost:11434");
-        ollama = new OllamaApiClient(uri);
+        
         
 
         RefreshQuestionCounter();
@@ -137,7 +139,7 @@ public class GameManager : Singleton<GameManager>
                 promptMonsterStatus.text);
         }
 
-        EnemyMoveToAnotherNpc();
+        // EnemyMoveToAnotherNpc();
     }
 
     public void Dialogue(NPC npc)
@@ -167,6 +169,11 @@ public class GameManager : Singleton<GameManager>
         string startPhraze = npc.characterProfile.startPhrazes[UnityEngine.Random.Range(0, npc.characterProfile.startPhrazes.Count)];
         dialogueText.SetText(startPhraze);
         dialoguePanel.SetActive(true);
+
+        // Display chat history
+        string chatHistory = npc.GetComponent<NPC>().GetChatHistory();
+        // dialogueText.SetText(chatHistory);
+        dialogueText.SetText(startPhraze);
 
         bool isMonster = ReferenceEquals(npc.gameObject, Instance.monster);
         Debug.Log($"isMonster: {isMonster}");
@@ -281,7 +288,7 @@ public class GameManager : Singleton<GameManager>
         Debug.Log("MakeEnemyTurn()");
 
         // Получаем список всех НЕ-монстров
-        List<GameObject> aliveNonMonsterNpcs = npcs.FindAll(npc => npc != monster);
+        List<GameObject> aliveNonMonsterNpcs;
 
         bool monsterAlive = npcs.Contains(monster);
         bool shouldMoveToAnotherNpc = UnityEngine.Random.value <= chanceToChangeBody / 100f;
@@ -296,6 +303,7 @@ public class GameManager : Singleton<GameManager>
         // If monster is still alive
         if (monsterAlive)
         {
+
             if (shouldMoveToPlayer)
             {
                 Debug.Log("Monster moved to Player!");
@@ -304,22 +312,26 @@ public class GameManager : Singleton<GameManager>
             }
             else if (shouldMoveToAnotherNpc)
             {
-                if (aliveNonMonsterNpcs.Count == 0)
+                aliveNonMonsterNpcs = npcs.FindAll(npc => npc != monster);
+                if (aliveNonMonsterNpcs.Count != 0)
                 {
-                    Debug.Log("No more non-monster NPCs left!");
-                    EndGame();
-                    return;
+                    // Выбираем случайного НЕ-монстра
+                    GameObject randomNpc = aliveNonMonsterNpcs[UnityEngine.Random.Range(0, aliveNonMonsterNpcs.Count)];
+
+                    Debug.Log($"EnemyTurn kills: {randomNpc.name}");
+
+                    npcs.Remove(randomNpc); // удаляем из общего списка
+                    Destroy(randomNpc);     // уничтожаем объект
+
+                    EnemyMoveToAnotherNpc();
                 }
-
-                // Выбираем случайного НЕ-монстра
-                GameObject randomNpc = aliveNonMonsterNpcs[UnityEngine.Random.Range(0, aliveNonMonsterNpcs.Count)];
-
-                Debug.Log($"EnemyTurn kills: {randomNpc.name}");
-
-                npcs.Remove(randomNpc); // удаляем из общего списка
-                Destroy(randomNpc);     // уничтожаем объект
-
-                EnemyMoveToAnotherNpc();
+            }
+            aliveNonMonsterNpcs = npcs.FindAll(npc => npc != monster);
+            if (aliveNonMonsterNpcs.Count == 0)
+            {
+                Debug.Log("No more non-monster NPCs left!");
+                EndGame();
+                return;
             }
 
         }

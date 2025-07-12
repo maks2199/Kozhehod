@@ -35,6 +35,13 @@ public class InteractionDetector : MonoBehaviour
 
             GameManager.Instance.activeNpc = other.gameObject;
             Debug.Log($"activeNpc: {GameManager.Instance.activeNpc}");
+
+            // Highlight by changing color
+            var spriteRenderer = other.GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.color = Color.yellow;
+            }
         }
     }
     private void OnTriggerExit2D(Collider2D other) {
@@ -45,6 +52,11 @@ public class InteractionDetector : MonoBehaviour
             dialoguePanel.SetActive(false);
             PauseController.SetPause(false);
 
+            var spriteRenderer = other.GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.color = Color.white;
+            }
             GameManager.Instance.activeNpc = null;
         }
     }

@@ -153,7 +153,7 @@ MonoBehaviour:
     \u0440\u0443\u043A\u043E\u0432\u043E\u0434\u0441\u0442\u0432\u043E."
   npcName: "\u0410\u043A\u0430\u043A\u0438\u0439 \u041F\u0435\u0442\u0440\u043E\u0432\u0438\u0447"
   npcProfession: "\u0411\u0438\u043E\u043B\u043E\u0433"
-  npcPortrait: {fileID: 0}
+  npcPortrait: {fileID: -5762985388437330898, guid: 6eb945e6f09814a92a8d311d9dec16b5, type: 3}
   startPhrazes:
   - "\u041D\u0443 \u043A\u0430\u043A, \u0432\u044B \u0432\u044B\u044F\u0441\u043D\u0438\u043B\u0438
     \u0447\u0442\u043E-\u0442\u043E?"

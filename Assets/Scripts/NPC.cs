@@ -1,6 +1,7 @@
 using System.Collections;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -52,6 +53,23 @@ public class NPC : MonoBehaviour, IInteractable
         chat.Think = false;
 
         // return chat;
+    }
+    public string GetChatHistory()
+    {
+        List<OllamaSharp.Models.Chat.Message> npcChatMessages = chat.Messages;
+        string chatLog = string.Join("\n", npcChatMessages
+        .Skip(1)
+        .Select(m =>
+        {
+            string role = m.Role.ToString() switch
+            {
+                "assistant" => characterProfile.npcName,
+                "user" => "Вы"
+            };
+            return $"{role}: {m.Content}";
+        }));
+
+        return chatLog;
     }
 }
 
