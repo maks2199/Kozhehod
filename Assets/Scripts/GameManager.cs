@@ -381,9 +381,10 @@ public class GameManager : Singleton<GameManager>
             Destroy(child.gameObject);
         }
 
-        // Добавим все живые NPC
+        // Добавим все живые NPC -- надо и мертвых тоже
         foreach (GameObject npcGO in npcs)
         {
+            if (npcGO == null) continue;
             NPC npc = npcGO.GetComponent<NPC>();
             GameObject itemGO = Instantiate(npcStatusItemPrefab, npcStatusListContainer);
             NpcStatusItem item = itemGO.GetComponent<NpcStatusItem>();
