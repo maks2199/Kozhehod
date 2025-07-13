@@ -9,8 +9,12 @@ public class NpcStatusItem : MonoBehaviour
     public TMP_Text professionText;
     public TMP_Text chatText;
 
+    public NPC connectedNpc;
+
     public void Setup(NPC npc)
     {
+        connectedNpc = npc;
+
         nameText.SetText(npc.characterProfile.npcName);
         professionText.SetText(npc.characterProfile.npcProfession);
 
@@ -28,7 +32,7 @@ public class NpcStatusItem : MonoBehaviour
         }
         // statusText.text = npc.GetStatus(); // например, "Жив" или "Подозрительный"
 
-            chatText.SetText(npc.GetChatHistory());
+        chatText.SetText(npc.GetChatHistory());
 
         // Enable components just in case
         if (!portraitImage.enabled) portraitImage.enabled = true;

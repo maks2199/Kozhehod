@@ -53,6 +53,8 @@ public class GameManager : Singleton<GameManager>
     public GameObject tutorialSceen;
     public TypingText tutorialTypingText;
     public GameObject lowNpcSceen;
+    public TMP_Text AnalyzeScreenChatHistory;
+    public TMP_Text AnalyzeScreenNPCName;
     public GameObject endGameScreen;
 
     public GameObject playerAnalyzeScreen;
@@ -464,6 +466,35 @@ public class GameManager : Singleton<GameManager>
         return isDialogueActive;
     }
 
+    public void OpenChatHistory(GameObject npcStatusItem)
+    {
+        NpcStatusItem npcStatusItemComponent = npcStatusItem.GetComponent<NpcStatusItem>();
+        NPC npc = npcStatusItemComponent.connectedNpc;
+        string chatHistoryText = npc.GetChatHistory();
+
+        if (chatHistoryText == "")
+        {
+            chatHistoryText = "...";
+        }
+
+        AnalyzeScreenChatHistory.SetText(chatHistoryText);
+        AnalyzeScreenNPCName.SetText(npc.characterProfile.npcName);
+    }
+    public void OpenFirstNpcChatHistory()
+    {
+        NPC npc = npcs[0].gameObject.GetComponent<NPC>();
+        string chatHistoryText = npc.GetChatHistory();
+
+        if (chatHistoryText == "")
+        {
+            chatHistoryText = "...";
+        }
+
+        AnalyzeScreenChatHistory.SetText(chatHistoryText);
+        AnalyzeScreenNPCName.SetText(npc.characterProfile.npcName);
+
+    }
+
 
     public void UpdateGameState(GameState newState)
     {
@@ -514,6 +545,7 @@ public class GameManager : Singleton<GameManager>
                 Debug.Log($"GameState: {currentState}");
                 // UI.SetActive(false);
                 playerAnalyzeScreen.SetActive(true);
+                OpenFirstNpcChatHistory();
                 break;
             case GameState.GameOver:
                 Debug.Log($"GameState: {currentState}");
