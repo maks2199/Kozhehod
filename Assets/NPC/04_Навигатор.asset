@@ -97,9 +97,10 @@ MonoBehaviour:
     \u043D\u0430 \u0441\u0430\u043C\u043E\u043C \u0434\u0435\u043B\u0435 \u043D\u0435\u0442)."
   npcName: "\u042D\u0448\u043B\u0438 \u0414\u0430\u043D\u043E\u0432\u0441\u043A\u0438"
   npcProfession: "\u041D\u0430\u0432\u0438\u0433\u0430\u0442\u043E\u0440"
-  npcPortrait: {fileID: 1078079237081225494, guid: c9bf57dafb72b4d238fe107260c139ef, type: 3}
+  npcPortrait: {fileID: 1078079237081225494, guid: d0f4a9784701b49f799399e8b1ab5f5a, type: 3}
   aliveSprite: {fileID: 4187753907955170651, guid: 05564705705ab4b22b3d16b081eaaf6f, type: 3}
-  deadSprite: {fileID: -1149312594620663861, guid: ff6a31607ae3a42149fef5f9b10ffb33, type: 3}
+  deadSprite: {fileID: -15499294003837635, guid: 02d5deb3e42764570965adaab408034b, type: 3}
+  monsteredSprite: {fileID: 4943368175697467169, guid: b30a055d2b9ef4f18bc61894348f7b2b, type: 3}
   startPhrazes:
   - "\u041C\u044B \u043B\u0435\u0442\u0438\u043C \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E,
     \u0432\u0430\u043C \u043D\u0435 \u0441\u0442\u043E\u0438\u0442 \u0434\u0443\u043C\u0430\u0442\u044C

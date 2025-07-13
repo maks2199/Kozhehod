@@ -15,7 +15,11 @@ public class NPC : MonoBehaviour, IInteractable
     public CharacterProfile characterProfile;
     public bool isMonster = false;
 
+    public bool isDead = false;
+
     public Chat chat;
+
+    public Status status;
 
     public bool CanInteract()
     {
@@ -73,13 +77,25 @@ public class NPC : MonoBehaviour, IInteractable
     }
 
     public void SetAliveSprite()
-{
-    SpriteRenderer sr = GetComponent<SpriteRenderer>();
-    if (sr != null && characterProfile.aliveSprite != null)
     {
-        sr.sprite = characterProfile.aliveSprite;
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null && characterProfile.aliveSprite != null)
+        {
+            sr.sprite = characterProfile.aliveSprite;
+        }
     }
-}
+
+    // public void SetStatusMonstered()
+    // {
+        
+    // }
+
+    public enum Status
+    {
+        Alive,
+        Killed,
+        Monstered
+    }
 }
 
 

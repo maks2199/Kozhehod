@@ -16,5 +16,7 @@ public class CharacterProfile : ScriptableObject
 
     public Sprite deadSprite;
 
+    public Sprite monsteredSprite;
+
     public List<String> startPhrazes;
 }

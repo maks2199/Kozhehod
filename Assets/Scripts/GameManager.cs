@@ -34,6 +34,8 @@ public class GameManager : Singleton<GameManager>
 
     // public GameObject[] npcs;
     public List<GameObject> npcs;
+    private List<GameObject> allNpcs; // копируем изначально всех NPC
+
 
     public GameObject monster;
 
@@ -49,6 +51,7 @@ public class GameManager : Singleton<GameManager>
     public GameObject menuSceen;
     public TMP_InputField playerNameField;
     public GameObject tutorialSceen;
+    public TypingText tutorialTypingText;
     public GameObject lowNpcSceen;
     public GameObject endGameScreen;
 
@@ -109,6 +112,8 @@ public class GameManager : Singleton<GameManager>
         UpdateGameState(GameState.MainMenu); // comment for debug
         // UpdateGameState(GameState.Playing);
         EnemyMoveToAnotherNpc();
+
+        allNpcs = new List<GameObject>(npcs); 
     }
 
 
@@ -138,7 +143,7 @@ public class GameManager : Singleton<GameManager>
 
             // Set alive sprite here
             npc.SetAliveSprite();
-            
+
             npc.UpdateChat(
                 ollama,
                 llmModelName,
@@ -179,6 +184,7 @@ public class GameManager : Singleton<GameManager>
         nameText.SetText(npc.characterProfile.npcName);
         professionText.SetText(npc.characterProfile.npcProfession);
         portraitImage.sprite = npc.characterProfile.npcPortrait;
+        portraitImage.preserveAspect = true;
 
 
         // Get random phraze from list
@@ -289,6 +295,22 @@ public class GameManager : Singleton<GameManager>
         // Destroy(activeNpc);     // уничтожаем объект // TODO replace with dead image instead of remove
         SpriteRenderer spriteRenderer = npc.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = npc.GetComponent<NPC>().characterProfile.deadSprite;
+        npc.GetComponent<CircleCollider2D>().enabled = false;
+        npc.GetComponent<NPC>().isDead = true;
+        npc.GetComponent<NPC>().status = NPC.Status.Killed;
+
+        // spriteRenderer.sprite.
+    }
+    private void KillNpcByMonster(GameObject npc)
+    {
+        npcs.Remove(npc); // удаляем из списка
+        // Destroy(activeNpc);     // уничтожаем объект // TODO replace with dead image instead of remove
+        SpriteRenderer spriteRenderer = npc.GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = npc.GetComponent<NPC>().characterProfile.monsteredSprite;
+        npc.GetComponent<CircleCollider2D>().enabled = false;
+        npc.GetComponent<NPC>().isDead = true;
+        npc.GetComponent<NPC>().status = NPC.Status.Monstered;
+
         // spriteRenderer.sprite.
     }
 
@@ -347,7 +369,8 @@ public class GameManager : Singleton<GameManager>
 
                     // npcs.Remove(randomNpc); // удаляем из общего списка
                     // Destroy(activeNpc);     // уничтожаем объект // TODO replace with dead image instead of remove
-                    KillNpc(randomNpc);
+                    // KillNpc(randomNpc);
+                    KillNpcByMonster(randomNpc);
 
                     EnemyMoveToAnotherNpc();
                 }
@@ -366,14 +389,15 @@ public class GameManager : Singleton<GameManager>
 
         }
 
-
+        UpdateNpcStatusScreen();
+        UpdateGameState(GameState.PlayerAnalyze);
 
         // UpdateGameState(GameState.Playing);
         // RefreshQuestionCounter();
         // UpdateCurrentScore();
 
         // Status of npcs
-        UpdateGameState(GameState.PlayerAnalyze);
+        
         
     }
 
@@ -386,7 +410,7 @@ public class GameManager : Singleton<GameManager>
         }
 
         // Добавим все живые NPC -- надо и мертвых тоже
-        foreach (GameObject npcGO in npcs)
+        foreach (GameObject npcGO in allNpcs)
         {
             if (npcGO == null) continue;
             NPC npc = npcGO.GetComponent<NPC>();
@@ -465,6 +489,11 @@ public class GameManager : Singleton<GameManager>
                 endGameScreen.SetActive(false);
                 playerAnalyzeScreen.SetActive(false);
                 UI.SetActive(false);
+
+                if (tutorialTypingText != null)
+                {
+                    tutorialTypingText.StartTyping(); // ✅ правильно
+                }
                 break;
             case GameState.Playing:
                 Time.timeScale = 1f;
@@ -489,6 +518,7 @@ public class GameManager : Singleton<GameManager>
             case GameState.GameOver:
                 Debug.Log($"GameState: {currentState}");
                 UI.SetActive(false);
+                playerAnalyzeScreen.SetActive(false);
                 endGameScreen.SetActive(true);
                 break;
             case GameState.Victory:
@@ -686,7 +716,7 @@ public class GameManager : Singleton<GameManager>
         // рассвет
         yield return StartCoroutine(FadeImage(false));
 
-        UpdateNpcStatusScreen();
+        
     }
 
 
