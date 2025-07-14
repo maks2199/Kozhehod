@@ -24,6 +24,9 @@ public class QuestionCounterUI : MonoBehaviour
         {
             questionIcons[i].sprite = (i < currentCount) ? fullSprite : emptySprite;
             questionIcons[i].enabled = true;
+
+            Color color = questionIcons[i].color;
+            questionIcons[i].color = new Color(color.r, color.g, color.b, 1.0f);
         }
     }
 

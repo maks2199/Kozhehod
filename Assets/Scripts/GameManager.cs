@@ -349,6 +349,7 @@ public class GameManager : Singleton<GameManager>
     {
         intRemainedQuestionCount = maxQuestions;
         uiRemainedQuestionCount.SetText(intRemainedQuestionCount.ToString());
+        questionCounterUI.Setup(maxQuestions);
     }
     private void DecreeseQuestionCounter()
     {
