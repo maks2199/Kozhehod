@@ -99,6 +99,7 @@ public class GameManager : Singleton<GameManager>
     public int maxQuestions = 10;
     private int intRemainedQuestionCount;
     private int countAskedQuestions = 0;
+    public QuestionCounterUI questionCounterUI;
     public float chanceToChangeBody;
 
     public int npcCountToKillPlayer;
@@ -125,7 +126,10 @@ public class GameManager : Singleton<GameManager>
         // UpdateGameState(GameState.Playing);
         EnemyMoveToAnotherNpc();
 
-        allNpcs = new List<GameObject>(npcs); 
+        allNpcs = new List<GameObject>(npcs);
+
+        questionCounterUI.Setup(maxQuestions);
+
     }
 
 
@@ -146,6 +150,7 @@ public class GameManager : Singleton<GameManager>
     void StartPlayerTurn()
     {
         
+
         RefreshQuestionCounter();
 
         npcs = new List<GameObject>(npcs); // преобразуем из массива в список
@@ -348,7 +353,8 @@ public class GameManager : Singleton<GameManager>
     private void DecreeseQuestionCounter()
     {
         intRemainedQuestionCount--;
-        uiRemainedQuestionCount.SetText(intRemainedQuestionCount.ToString()); 
+        uiRemainedQuestionCount.SetText(intRemainedQuestionCount.ToString());
+        questionCounterUI.UseQuestion();
     }
 
     public void MakeEnemyTurn()
