@@ -26,7 +26,8 @@ public class LeaderboardData
 
     public string EntriesToString()
     {
-        // using System.Linq;
+        // Sort in-place by descending score
+        entries.Sort((a, b) => b.score.CompareTo(a.score));
         return string.Join("\n", entries);
     }
 }

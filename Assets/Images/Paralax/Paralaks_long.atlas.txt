@@ -1,0 +1,41 @@
+
+Paralaks_long.png
+size: 12599,5266
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+BuildingsBack_3
+  rotate: false
+  xy: 2, 2506
+  size: 10838, 818
+  orig: 10838, 818
+  offset: 0, 0
+  index: -1
+BuildingsFront2
+  rotate: false
+  xy: 2, 3326
+  size: 12595, 592
+  orig: 12595, 592
+  offset: 0, 0
+  index: -1
+Derezhabl
+  rotate: true
+  xy: 12002, 4153
+  size: 1111, 513
+  orig: 1111, 513
+  offset: 0, 0
+  index: -1
+Fon
+  rotate: false
+  xy: 2, 2
+  size: 4002, 2502
+  orig: 4002, 2502
+  offset: 0, 0
+  index: -1
+Sky_long_3
+  rotate: false
+  xy: 2, 3920
+  size: 11998, 1344
+  orig: 11998, 1344
+  offset: 0, 0
+  index: -1

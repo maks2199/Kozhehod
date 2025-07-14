@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+
 
 public class InteractionDetector : MonoBehaviour
 {
@@ -7,6 +9,8 @@ public class InteractionDetector : MonoBehaviour
     public GameObject interactionIcon;
 
     public GameObject dialoguePanel;
+
+    public GameObject interactButton;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -22,7 +26,14 @@ public class InteractionDetector : MonoBehaviour
         {
             Debug.Log("InteractionDetector Interact!");
             interactableInRange?.Interact();
+            interactButton.SetActive(false);
         }
+    }
+
+    public void OnClick()
+    {
+        interactableInRange?.Interact();
+        interactButton.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -31,6 +42,10 @@ public class InteractionDetector : MonoBehaviour
         {
             interactableInRange = interactable;
             interactionIcon.SetActive(true);
+
+            interactButton.SetActive(true);
+            // var buttonImage = interactButton.GetComponent<Image>();
+            // buttonImage.color = new Color(250, 250, 250);
             // dialoguePanel.SetActive(true);
 
             GameManager.Instance.activeNpc = other.gameObject;
@@ -49,6 +64,11 @@ public class InteractionDetector : MonoBehaviour
         {
             interactableInRange = null;
             interactionIcon.SetActive(false);
+
+            interactButton.SetActive(false);
+            // var buttonImage = interactButton.GetComponent<Image>();
+            // buttonImage.color = new Color(160, 160, 160);
+
             dialoguePanel.SetActive(false);
             PauseController.SetPause(false);
 

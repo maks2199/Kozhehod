@@ -13,6 +13,8 @@ using Unity.VisualScripting;
 using System.Linq;
 using System.IO;
 using NUnit.Framework.Constraints;
+using Spine.Unity;
+
 
 
 public class GameManager : Singleton<GameManager>
@@ -49,6 +51,8 @@ public class GameManager : Singleton<GameManager>
     // UI ----------
 
     public GameObject menuSceen;
+    public SkeletonGraphic skeletonAnimation;
+
     public TMP_InputField playerNameField;
     public GameObject tutorialSceen;
     public TypingText tutorialTypingText;
@@ -85,7 +89,10 @@ public class GameManager : Singleton<GameManager>
     // Player Analyze screen
     public GameObject npcStatusScreen;
     public Transform npcStatusListContainer; // content для списка
+    public Transform npcStatusListContainerEnd; // content для списка
     public GameObject npcStatusItemPrefab;
+    public GameObject npcStatusItemPrefabEnd;
+    private NpcStatusItem lastClickedNpcStatusItem;
 
 
     // Game loop
@@ -103,10 +110,13 @@ public class GameManager : Singleton<GameManager>
     void Awake()
     {
         Instance = this;
+        Screen.SetResolution(1920, 1080, true);
     }
 
     void Start()
     {
+        skeletonAnimation.AnimationState.SetAnimation(0, "animation", true);
+
         // set up the client
         uri = new Uri("http://localhost:11434");
         ollama = new OllamaApiClient(uri);
@@ -152,7 +162,8 @@ public class GameManager : Singleton<GameManager>
                 promptPreamble.text,
                 promptConversationRules.text,
                 promptHumanStatus.text,
-                promptMonsterStatus.text);
+                promptMonsterStatus.text,
+                playerNameField.text);
         }
 
         // EnemyMoveToAnotherNpc();
@@ -230,6 +241,7 @@ public class GameManager : Singleton<GameManager>
             Debug.Log($"isMonster: {isMonster}");
 
             string playerQuestion = inputField.text;
+
             endGameScreenQuestions.text += $"\n {playerQuestion}";
 
 
@@ -269,6 +281,11 @@ public class GameManager : Singleton<GameManager>
 
 
     // Game loop -------------------------------
+
+    public void CloseDialoguePanel()
+    {
+        dialoguePanel.SetActive(false);
+    }
     public void KillNpcPlayer()
     {
         Debug.Log("KillNpc()");
@@ -290,6 +307,8 @@ public class GameManager : Singleton<GameManager>
             EndPlayerTurn();
         }
     }
+
+
 
     private void KillNpc(GameObject npc)
     {
@@ -405,6 +424,8 @@ public class GameManager : Singleton<GameManager>
 
     private void UpdateNpcStatusScreen()
     {
+        // bool first = true;
+
         // Очистим список
         foreach (Transform child in npcStatusListContainer)
         {
@@ -420,10 +441,32 @@ public class GameManager : Singleton<GameManager>
             NpcStatusItem item = itemGO.GetComponent<NpcStatusItem>();
             item.Setup(npc);
 
-            // itemGO.SetActive(true); // Make sure whole item is active
-            // portraitImage.gameObject.SetActive(true);
-            // nameText.gameObject.SetActive(true);
-            // professionText.gameObject.SetActive(true);
+
+            // Highlight pulse first icon
+            // if (first)
+            // {
+            //     item.PlayPulse();
+            //     first = false;
+            // }
+        }
+
+    }
+    private void UpdateNpcEndScreen()
+    {
+        // Очистим список
+        foreach (Transform child in npcStatusListContainerEnd)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // Добавим все живые NPC -- надо и мертвых тоже
+        foreach (GameObject npcGO in allNpcs)
+        {
+            if (npcGO == null) continue;
+            NPC npc = npcGO.GetComponent<NPC>();
+            GameObject itemGO = Instantiate(npcStatusItemPrefabEnd, npcStatusListContainerEnd);
+            NpcStatusItem item = itemGO.GetComponent<NpcStatusItem>();
+            item.SetupEnd(npc);
         }
     }
 
@@ -436,13 +479,15 @@ public class GameManager : Singleton<GameManager>
         NPC monsterNpc = monster.GetComponent<NPC>();
         string monsterName = monsterNpc.characterProfile.npcName;
         monsterNpc.isMonster = true;
+        monsterNpc.wasMonster = true;
         monsterNpc.UpdateChat(
             ollama,
             llmModelName,
             promptPreamble.text,
             promptConversationRules.text,
             promptHumanStatus.text,
-            promptMonsterStatus.text);
+            promptMonsterStatus.text,
+            playerNameField.text);
 
 
         // Log choice
@@ -468,6 +513,13 @@ public class GameManager : Singleton<GameManager>
 
     public void OpenChatHistory(GameObject npcStatusItem)
     {
+        
+        if (lastClickedNpcStatusItem != null)
+        {
+            lastClickedNpcStatusItem.StopPulse();
+        }
+
+
         NpcStatusItem npcStatusItemComponent = npcStatusItem.GetComponent<NpcStatusItem>();
         NPC npc = npcStatusItemComponent.connectedNpc;
         string chatHistoryText = npc.GetChatHistory();
@@ -479,9 +531,17 @@ public class GameManager : Singleton<GameManager>
 
         AnalyzeScreenChatHistory.SetText(chatHistoryText);
         AnalyzeScreenNPCName.SetText(npc.characterProfile.npcName);
+
+        lastClickedNpcStatusItem = npcStatusItemComponent;
+        lastClickedNpcStatusItem.PlayPulse();
     }
     public void OpenFirstNpcChatHistory()
     {
+        // if (lastClickedNpcStatusItem != null)
+        // {
+        //     lastClickedNpcStatusItem.StopPulse();
+        // }
+
         NPC npc = npcs[0].gameObject.GetComponent<NPC>();
         string chatHistoryText = npc.GetChatHistory();
 
@@ -493,6 +553,7 @@ public class GameManager : Singleton<GameManager>
         AnalyzeScreenChatHistory.SetText(chatHistoryText);
         AnalyzeScreenNPCName.SetText(npc.characterProfile.npcName);
 
+        // lastClickedNpcStatusItem.PlayPulse();
     }
 
 
@@ -503,7 +564,7 @@ public class GameManager : Singleton<GameManager>
         switch (newState)
         {
             case GameState.MainMenu:
-                Time.timeScale = 0f;
+                Time.timeScale = 1f;
                 Debug.Log($"GameState: {currentState}");
                 menuSceen.SetActive(true);
                 tutorialSceen.SetActive(false);
@@ -612,18 +673,20 @@ public class GameManager : Singleton<GameManager>
         {
             score = 0;
             endGameScreenResult.SetText($"Поражение. Кожеход добрался до города");
-            endGameScreenResult.color = new Color(250, 0, 0);
+            endGameScreenResult.color = new Color(49, 49, 49);
             endGameScreenScore.SetText("Счёт: 0");
         }
         else
         {
             score = countAliveNpcs * 10 + countAskedQuestions * -1 + 40;
             endGameScreenResult.SetText($"Победа");
-            endGameScreenResult.color = new Color(0, 250, 0);
+            endGameScreenResult.color = new Color(49, 49, 49);
             endGameScreenScore.SetText("Счёт: " + score.ToString());
         }
 
         uiMonsterNames.SetText("Имена монстров: " + string.Join(", ", monsterNames));
+        UpdateNpcEndScreen();
+
 
         // Count asked questions
         endGameScreenQuestionsCount.SetText($"Вопросы: {countAskedQuestions}");

@@ -1,0 +1,754 @@
+fileFormatVersion: 2
+guid: 46020eabcadea49de940a461105a1246
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6756139330181866482
+    second: Paralaks_long_0
+  - first:
+      213: 6631900977177308255
+    second: Paralaks_long_1
+  - first:
+      213: 3040586893043280276
+    second: Paralaks_long_2
+  - first:
+      213: -4108580498700522282
+    second: Paralaks_long_3
+  - first:
+      213: 5076088261214445360
+    second: Paralaks_long_4
+  - first:
+      213: 56737851791128786
+    second: Paralaks_long_5
+  - first:
+      213: 4603555665072911952
+    second: Paralaks_long_6
+  - first:
+      213: -7342618673659267125
+    second: Paralaks_long_7
+  - first:
+      213: -708391576636058901
+    second: Paralaks_long_8
+  - first:
+      213: -6944743932839133435
+    second: Paralaks_long_9
+  - first:
+      213: -1608444008763413665
+    second: Paralaks_long_10
+  - first:
+      213: 4861096927757364464
+    second: Paralaks_long_11
+  - first:
+      213: -7762222433656399135
+    second: Paralaks_long_12
+  - first:
+      213: -4585658086468766265
+    second: Paralaks_long_13
+  - first:
+      213: 5254250672443823516
+    second: Paralaks_long_14
+  - first:
+      213: 3879075068400270200
+    second: Paralaks_long_15
+  - first:
+      213: 4871956179155282303
+    second: Paralaks_long_16
+  - first:
+      213: -3985791275604705929
+    second: Paralaks_long_17
+  - first:
+      213: 7764898789017837311
+    second: Paralaks_long_18
+  - first:
+      213: -7655718372152862768
+    second: Paralaks_long_19
+  - first:
+      213: 5349791100669555097
+    second: Paralaks_long_20
+  - first:
+      213: 5384373610546718515
+    second: Paralaks_long_21
+  - first:
+      213: -5270594919094759632
+    second: Paralaks_long_22
+  - first:
+      213: -62036330545604738
+    second: Paralaks_long_23
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 0
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 0
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Paralaks_long_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 2762
+        width: 4002
+        height: 2502
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0cd673231f5d32a0800000000000000
+      internalID: -6756139330181866482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_1
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1972
+        width: 742
+        height: 541
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5c283a2dce390c50800000000000000
+      internalID: 6631900977177308255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_2
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 1942
+        width: 762
+        height: 731
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 499ad846ba5523a20800000000000000
+      internalID: 3040586893043280276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_3
+      rect:
+        serializedVersion: 2
+        x: 1955
+        y: 1942
+        width: 856
+        height: 710
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6dcabdbfdc36bf6c0800000000000000
+      internalID: -4108580498700522282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_4
+      rect:
+        serializedVersion: 2
+        x: 2746
+        y: 1942
+        width: 762
+        height: 818
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03f973a1163e17640800000000000000
+      internalID: 5076088261214445360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_5
+      rect:
+        serializedVersion: 2
+        x: 3668
+        y: 1972
+        width: 742
+        height: 541
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d8345d86c299c000800000000000000
+      internalID: 56737851791128786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_6
+      rect:
+        serializedVersion: 2
+        x: 4657
+        y: 1942
+        width: 762
+        height: 731
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05678689c7d13ef30800000000000000
+      internalID: 4603555665072911952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_7
+      rect:
+        serializedVersion: 2
+        x: 5621
+        y: 1942
+        width: 856
+        height: 710
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc7b36b1837c91a90800000000000000
+      internalID: -7342618673659267125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_8
+      rect:
+        serializedVersion: 2
+        x: 6412
+        y: 1942
+        width: 762
+        height: 818
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be29ab04d994b26f0800000000000000
+      internalID: -708391576636058901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_9
+      rect:
+        serializedVersion: 2
+        x: 7334
+        y: 1972
+        width: 742
+        height: 541
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50ff21b10305f9f90800000000000000
+      internalID: -6944743932839133435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_10
+      rect:
+        serializedVersion: 2
+        x: 8323
+        y: 1942
+        width: 762
+        height: 731
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5b2d8822b8ada9e0800000000000000
+      internalID: -1608444008763413665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_11
+      rect:
+        serializedVersion: 2
+        x: 9287
+        y: 1942
+        width: 856
+        height: 710
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fc68bd86e5167340800000000000000
+      internalID: 4861096927757364464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_12
+      rect:
+        serializedVersion: 2
+        x: 10078
+        y: 1942
+        width: 762
+        height: 818
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ea975692db074490800000000000000
+      internalID: -7762222433656399135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_13
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1391
+        width: 1125
+        height: 427
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c5b1a624487c50c0800000000000000
+      internalID: -4585658086468766265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_14
+      rect:
+        serializedVersion: 2
+        x: 1509
+        y: 1391
+        width: 895
+        height: 549
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c951fdbf529dae840800000000000000
+      internalID: 5254250672443823516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_15
+      rect:
+        serializedVersion: 2
+        x: 2696
+        y: 1348
+        width: 1313
+        height: 545
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87b7215f83e35d530800000000000000
+      internalID: 3879075068400270200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_16
+      rect:
+        serializedVersion: 2
+        x: 4296
+        y: 1391
+        width: 1125
+        height: 427
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f79e1db055aac9340800000000000000
+      internalID: 4871956179155282303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_17
+      rect:
+        serializedVersion: 2
+        x: 5803
+        y: 1391
+        width: 895
+        height: 549
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77dfab4d3ff9fa8c0800000000000000
+      internalID: -3985791275604705929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_18
+      rect:
+        serializedVersion: 2
+        x: 6990
+        y: 1348
+        width: 1313
+        height: 545
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffed444fe4672cb60800000000000000
+      internalID: 7764898789017837311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_19
+      rect:
+        serializedVersion: 2
+        x: 8590
+        y: 1391
+        width: 1125
+        height: 427
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d79567c3bc61c590800000000000000
+      internalID: -7655718372152862768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_20
+      rect:
+        serializedVersion: 2
+        x: 10097
+        y: 1391
+        width: 895
+        height: 549
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99174f169a64e3a40800000000000000
+      internalID: 5349791100669555097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_21
+      rect:
+        serializedVersion: 2
+        x: 11284
+        y: 1348
+        width: 1313
+        height: 545
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 337ef9a654329ba40800000000000000
+      internalID: 5384373610546718515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_22
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 2
+        width: 11998
+        height: 1344
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03fc06c88d51bd6b0800000000000000
+      internalID: -5270594919094759632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Paralaks_long_23
+      rect:
+        serializedVersion: 2
+        x: 12002
+        y: 2
+        width: 513
+        height: 1111
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7719aa394a932ff0800000000000000
+      internalID: -62036330545604738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Paralaks_long_0: -6756139330181866482
+      Paralaks_long_1: 6631900977177308255
+      Paralaks_long_10: -1608444008763413665
+      Paralaks_long_11: 4861096927757364464
+      Paralaks_long_12: -7762222433656399135
+      Paralaks_long_13: -4585658086468766265
+      Paralaks_long_14: 5254250672443823516
+      Paralaks_long_15: 3879075068400270200
+      Paralaks_long_16: 4871956179155282303
+      Paralaks_long_17: -3985791275604705929
+      Paralaks_long_18: 7764898789017837311
+      Paralaks_long_19: -7655718372152862768
+      Paralaks_long_2: 3040586893043280276
+      Paralaks_long_20: 5349791100669555097
+      Paralaks_long_21: 5384373610546718515
+      Paralaks_long_22: -5270594919094759632
+      Paralaks_long_23: -62036330545604738
+      Paralaks_long_3: -4108580498700522282
+      Paralaks_long_4: 5076088261214445360
+      Paralaks_long_5: 56737851791128786
+      Paralaks_long_6: 4603555665072911952
+      Paralaks_long_7: -7342618673659267125
+      Paralaks_long_8: -708391576636058901
+      Paralaks_long_9: -6944743932839133435
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

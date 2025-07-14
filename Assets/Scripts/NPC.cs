@@ -15,6 +15,8 @@ public class NPC : MonoBehaviour, IInteractable
     public CharacterProfile characterProfile;
     public bool isMonster = false;
 
+    public bool wasMonster = false;
+
     public bool isDead = false;
 
     public Chat chat;
@@ -34,7 +36,7 @@ public class NPC : MonoBehaviour, IInteractable
     }
 
     public void UpdateChat(OllamaApiClient ollama,
-        string modelName, string promptPreamble, string promptConversationRules, string promptStatusHuman, string promptStatusMonster)
+        string modelName, string promptPreamble, string promptConversationRules, string promptStatusHuman, string promptStatusMonster, string playerName)
     {
         string statusText;
         if (isMonster)
@@ -43,7 +45,7 @@ public class NPC : MonoBehaviour, IInteractable
         }
         else
         {
-            statusText = promptStatusHuman;
+            statusText = promptStatusHuman + $"Обращайся к игроку по имени {playerName}";
         }
 
         string systemPrompt =
