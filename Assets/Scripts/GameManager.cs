@@ -432,6 +432,8 @@ public class GameManager : Singleton<GameManager>
             Destroy(child.gameObject);
         }
 
+        NpcStatusItem firstItem = null;
+
         // Добавим все живые NPC -- надо и мертвых тоже
         foreach (GameObject npcGO in allNpcs)
         {
@@ -442,14 +444,25 @@ public class GameManager : Singleton<GameManager>
             item.Setup(npc);
 
 
-            // Highlight pulse first icon
-            // if (first)
-            // {
-            //     item.PlayPulse();
-            //     first = false;
-            // }
+            if (firstItem == null)
+            {
+                firstItem = item;
+            }
         }
 
+        // Вызываем PlayPulse и OpenChatHistory для первого элемента
+        if (firstItem != null)
+        {
+            // firstItem.PlayPulse();
+            // OpenChatHistory(firstItem.gameObject);
+            StartCoroutine(ActivateFirstItemPulse(firstItem));
+        }
+
+    }
+    private IEnumerator ActivateFirstItemPulse(NpcStatusItem item)
+    {
+        yield return null; // дождаться активации объекта в Unity
+        OpenChatHistory(item.gameObject);
     }
     private void UpdateNpcEndScreen()
     {
@@ -606,7 +619,7 @@ public class GameManager : Singleton<GameManager>
                 Debug.Log($"GameState: {currentState}");
                 // UI.SetActive(false);
                 playerAnalyzeScreen.SetActive(true);
-                OpenFirstNpcChatHistory();
+                // OpenFirstNpcChatHistory();
                 break;
             case GameState.GameOver:
                 Debug.Log($"GameState: {currentState}");

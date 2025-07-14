@@ -44,8 +44,8 @@ public class NpcStatusItem : MonoBehaviour
 
     private IEnumerator PulseEffect()
     {
-        float pulseSpeed = .75f;       // скорость пульсации
-        float pulseAmount = 0.03f;   // насколько масштаб увеличивается
+        float pulseSpeed = .80f;       // скорость пульсации
+        float pulseAmount = 0.05f;   // насколько масштаб увеличивается
 
         while (true)
         {
