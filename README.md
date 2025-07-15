@@ -22,7 +22,7 @@
 
 ## Демо
 
-[![Watch the video](Docs/Screen1.jpg)](Docs/trailer.MOV)
+[![Watch the video](Docs/Menu.jpg)](https://youtu.be/-nt4xxFyYRc)
 
 ![](Docs/screen01.jpg)
 ![](Docs/screen3.jpg)
