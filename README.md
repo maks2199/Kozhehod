@@ -2,7 +2,7 @@
 
 Визуальная новелла в жанре road movie о поиске убийцы на дирижабле.
 
-[![Watch the video](Docs/Screen1.jpg)](Docs/trailer.MOV)
+[![Watch the video](Docs/Menu.jpg)](https://youtu.be/-nt4xxFyYRc)
 
 ## Концепция игры.
 
